@@ -1,15 +1,20 @@
 \documentclass{article}
 \usepackage[british]{babel}
-\usepackage[margin=1cm]{geometry}
+\usepackage[margin=1in]{geometry}
 \usepackage{graphicx}
 \usepackage{nopageno}
 \usepackage[sfdefault,condensed]{universalis}
 \usepackage{caption}
+\usepackage{fancyhdr}
 \usepackage{hyperref}
 
 \usepackage{gurps} % Download from https://github.com/nasfarley88/gurps-latex-package 
 \usepackage{gurps-weaponcard}
 
+
+\pagestyle{fancy}
+\chead{Weapons cards for \gurps -- See more at \url{https://3d6andgo.blogspot.com/}}
+\cfoot{\footnotesize\SJGamesOnlinePolicyGameAid{Nathana\null el Farley}}
 
 \title{Weapon cards for \gurps}
 \author{Nathana\null el Farley}
@@ -20,7 +25,7 @@
 \noindent
 This is a demonstration of the \texttt{gurps-weaponcard} package. More info can
 be found at \url{https://3d6andgo.blogspot.com/2018/04/weapons-cards.html}. For
-the code, see TODOGITHUBLINK.
+the code, see \url{https://github.com/nasfarley88/3d6andgo-stuff/tree/master/weaponsheet}.
 
 \section*{Disclaimer}
 \label{sec:disclaimer}
@@ -118,13 +123,15 @@ the code, see TODOGITHUBLINK.
       lc=0,
     }%
   \end{center}
-  \captionof{figure}{A demonstration of the various possibilities. See the \texttt{weapons.tex}
-    file for code examples!}
+  \captionof{figure}{A demonstration of the various possibilities. See the
+    \texttt{weapons.tex} file, l.39, for code examples!}
 \end{minipage}
 \vfill
-\clearpage\noindent\centering
 \NewDocumentCommand{\ul}{m}{\rule[-2pt]{#1}{0.3pt}}%
-\foreach \i in {1,...,10} {%
+\clearpage\noindent\centering
+\vspace*{\fill}%
+
+\foreach \i in {1,...,8} {%
   \foreach \j in {1,2} {%
     \RangedWeaponCard{
       name=\ul{9.5em},
@@ -143,8 +150,11 @@ the code, see TODOGITHUBLINK.
       notes=\ul{9.5em}
     }%
   }\\[-1pt]%
-}
-\foreach \i in {1,...,10} {%
+}%
+\vfill%
+\newpage%
+\vspace*{\fill}%
+\foreach \i in {1,...,8} {%
   \foreach \j in {1,2} {%
     \MeleeWeaponCard{
       name=\ul{9.5em},
@@ -159,7 +169,8 @@ the code, see TODOGITHUBLINK.
       notes=\ul{9.5em}
     }%
   }\\[-1pt]%
-}
+}%
+\vfill
 \end{document}
 
 %%% Local Variables:
