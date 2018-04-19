@@ -1,0 +1,71 @@
+\documentclass[a4paper]{article}
+
+\usepackage[margin=1cm]{geometry}
+\usepackage{bbding}
+\usepackage{tikz}
+\usepackage{xparse}
+\usepackage{luacode}
+\usepackage[sfdefault]{universalis}
+\usepackage{nopageno}
+\usepackage{gurps}
+
+% \usepackage{amsfonts}
+\usepackage{hyperref}
+
+\luadirect{require("gurps_critical_roll_tables.lua")}
+
+\usetikzlibrary{calc}
+\usetikzlibrary{shapes}
+\newcommand{\shapearound}[3]{\tikz[baseline=(char.base), anchor=center]{
+    \draw[draw=none, use as bounding box] (-1.1ex,-1.1ex) rectangle (1.1ex, 1.1ex);
+    \node[#1,draw,#2,text=black,inner sep=3.9pt, anchor=center, solid] (charmander) {};
+    \node (char) {\small #3};
+  }}
+\newcommand\pass[1]{\shapearound{circle}{black}{#1}}
+\newcommand\critpass[1]{\shapearound{starburst, starburst point height=3pt 
+    % ,text width=0.7ex, align=center
+  }{black}{#1}}
+\newcommand\fail[1]{\shapearound{}{white}{#1}}
+% \newcommand\critfail[1]{\shapearound{single arrow, shape border rotate=270,
+%     single arrow head extend=3pt}{black}{#1}} 
+\newcommand\critfail[1]{\shapearound{regular polygon, regular polygon sides=8}{fill=red!20}{#1}} 
+
+% \NewDocumentCommand{\critfail}{m}{\(\times\times\)}
+% \NewDocumentCommand{\fail}{m}{\(\times\)}
+% \NewDocumentCommand{\pass}{m}{\checkmark}
+% \NewDocumentCommand{\critpass}{m}{\checkmark\checkmark}
+
+\NewDocumentCommand{\crittable}{}{%
+  \def\tmptab{\luadirect{printcrittable(3,17)}}%
+  \let\tab\tmptab%
+  \tikz{\node[inner sep=3pt] {\tab};}}
+
+\renewcommand{\arraystretch}{1.2}
+\begin{document}
+\centering
+{\Large \gurps critical roll tables}\\
+Reference: \gurpsbook{Lite}[2--3], see more at \url{https://3d6andgo.wordpress.com.}
+\vfill
+\begin{tikzpicture}[crittable/.style={inner sep=0pt}]
+  \node[crittable] (a) {\crittable};
+  \node[crittable, anchor=west] (b) at (a.east) {\crittable};
+  \node[crittable, anchor=north] (c) at (a.south) {\crittable};
+  \node[crittable, anchor=west] (d) at (c.east) {\crittable};
+  \node[crittable, anchor=north] (e) at (c.south) {\crittable};
+  \node[crittable, anchor=west] (f) at (e.east) {\crittable};
+
+  \draw[loosely dotted] (a.north west) rectangle (f.south east);
+  \draw[loosely dotted] (a.north east) -- (e.south east);
+  \draw[loosely dotted] (a.south west) -- (b.south east);
+  \draw[loosely dotted] (c.south west) -- (d.south east);
+
+  \node[xshift=2ex] at (a.north west) {\large\ScissorRight};
+\end{tikzpicture}
+\vfill
+{\footnotesize \SJGamesOnlinePolicyGameAid{Nathanael Farley}}
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
