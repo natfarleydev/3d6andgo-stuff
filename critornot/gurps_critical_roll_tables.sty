@@ -1,0 +1,26 @@
+\RequirePackage{bbding}
+\RequirePackage{tikz}
+\RequirePackage{xparse}
+\RequirePackage{luacode}
+\luadirect{require("gurps_critical_roll_tables.lua")}
+
+\usetikzlibrary{calc}
+\usetikzlibrary{shapes}
+\newcommand{\shapearound}[3]{\tikz[baseline=(char.base), anchor=center]{
+    \draw[draw=none, use as bounding box] (-1.1ex,-1.1ex) rectangle (1.1ex, 1.1ex);
+    \node[#1,draw,#2,text=black,inner sep=3.9pt, anchor=center, solid] (charmander) {};
+    \node (char) {\small #3};
+  }}
+\newcommand\pass[1]{\shapearound{circle}{black}{#1}}
+\newcommand\critpass[1]{\shapearound{starburst, starburst point height=3pt 
+    % ,text width=0.7ex, align=center
+  }{black}{#1}}
+\newcommand\fail[1]{\shapearound{}{white}{#1}}
+% \newcommand\critfail[1]{\shapearound{single arrow, shape border rotate=270,
+%     single arrow head extend=3pt}{black}{#1}} 
+\newcommand\critfail[1]{\shapearound{regular polygon, regular polygon sides=8}{fill=red!20}{#1}} 
+
+% \NewDocumentCommand{\critfail}{m}{\(\times\times\)}
+% \NewDocumentCommand{\fail}{m}{\(\times\)}
+% \NewDocumentCommand{\pass}{m}{\checkmark}
+% \NewDocumentCommand{\critpass}{m}{\checkmark\checkmark}

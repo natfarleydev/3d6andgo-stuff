@@ -2,7 +2,7 @@ function format_num_for_tex(x)
   return tostring(x)
 end
 
-function strdiceroll(tobeat, d)
+function strdiceroll(tobeat, d, always_fail_seventeen)
   d = d or diceroll()
   tobeat = tobeat or 10
   if tobeat < 15 then
@@ -17,6 +17,8 @@ function strdiceroll(tobeat, d)
     return [[\critfail{]] .. format_num_for_tex(d) .. "}"
   elseif tobeat < 16 and d > 16 then
     return [[\critfail{]] .. format_num_for_tex(d) .. "}"
+  elseif always_fail_seventeen and d == 17 then
+    return [[\fail{]] .. format_num_for_tex(d) .. "}"
   elseif d <= tocrit then
     return [[\critpass{]] .. format_num_for_tex(d) .. "}"
   elseif d > tobeat then
@@ -26,7 +28,7 @@ function strdiceroll(tobeat, d)
   end
 end
 
-function printcrittable(min, max)
+function printcrittable(min, max, always_fail_seventeen)
   -- tex.sprint([[\begin{verbatim}]])
   tablespec = "l@{ }r@{}c"
   for i=3,18,1 do
@@ -49,7 +51,7 @@ function printcrittable(min, max)
       s = s .. [[\\ Level: & \textbf{]] .. i .. [[} &+]]
     end
     for roll=3,18,1 do
-      s = s .. "& " .. strdiceroll(i, roll)
+      s = s .. "& " .. strdiceroll(i, roll, always_fail_seventeen)
     end
   end
 

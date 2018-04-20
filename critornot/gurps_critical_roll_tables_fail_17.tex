@@ -12,14 +12,14 @@
 
 
 \NewDocumentCommand{\crittable}{}{%
-  \def\tmptab{\luadirect{printcrittable(3,17)}}%
+  \def\tmptab{\luadirect{printcrittable(3,17, true)}}%
   \let\tab\tmptab%
   \tikz{\node[inner sep=3pt] {\tab};}}
 
 \renewcommand{\arraystretch}{1.2}
 \begin{document}
 \centering
-{\Large \gurps critical roll tables}\\
+{\Large \gurps critical roll tables (always fail 17)}\\
 Reference: \gurpsbook{Lite}[2--3], see more at \url{https://3d6andgo.wordpress.com.}
 \vfill
 \begin{tikzpicture}[crittable/.style={inner sep=0pt}]
@@ -40,6 +40,11 @@ Reference: \gurpsbook{Lite}[2--3], see more at \url{https://3d6andgo.wordpress.c
 \vfill
 {\footnotesize \SJGamesOnlinePolicyGameAid{Nathanael Farley}}
 \end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
 
 %%% Local Variables:
 %%% mode: latex
