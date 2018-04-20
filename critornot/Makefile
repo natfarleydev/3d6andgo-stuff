@@ -1,4 +1,4 @@
-all: gurps_critical_roll_tables.pdf gurps_critical_roll_tables_fail_17.pdf
+all: gurps_critical_roll_tables.pdf
 
 %.pdf: %.tex gurps_critical_roll_tables.lua
 	lualatex $<

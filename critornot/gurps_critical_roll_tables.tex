@@ -12,11 +12,12 @@
 
 
 \NewDocumentCommand{\crittable}{}{%
-  \def\tmptab{\luadirect{printcrittable(3,17)}}%
+  \def\tmptab{\luadirect{printcrittable(2,16)}}%
   \let\tab\tmptab%
   \tikz{\node[inner sep=3pt] {\tab};}}
 
 \renewcommand{\arraystretch}{1.2}
+
 \begin{document}
 \centering
 {\Large \gurps critical roll tables}\\
