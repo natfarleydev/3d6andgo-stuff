@@ -1,0 +1,96 @@
+\RequirePackage{xparse}
+\RequirePackage{wrapfig}
+\RequirePackage{luacode}
+\luadirect{require('gurps-npccard.lua')}
+\RequirePackage{tikz}
+\usetikzlibrary{shapes.geometric}
+
+\NewDocumentCommand{\GCCardPrintImportantStuff}{}{%
+  \hfill{\Large\bfseries\CharacterName}\hspace*{\fill} \\
+  % \textbf{\strut Base stats} \gurps@char@basicattributes\\
+  % DR, Dodge, SM, Parry?
+  \mbox{\begin{tabular}[c]{@{}lr@{\(|\)}lr@{\(|\)}lr@{\(|\)}lr@{}}
+    \textbf{ST}&\GCGet{ST}\GCResult& \textbf{HP} &\GCGet{HP}\GCResult     &\textbf{DR}&\GCGet{DR}\GCResult& \textbf{Basic Speed}&\GCGet{Basic Speed}\GCResult\\
+    \textbf{DX}&\GCGet{DX}\GCResult& \textbf{Will} &\GCGet{Will}\GCResult &\textbf{SM} &\GCGet{SM}\GCResult& \textbf{Basic Move}&\GCGet{Basic Move}\GCResult\\
+    \textbf{IQ}&\GCGet{IQ}\GCResult& \textbf{Per} &\GCGet{Per}\GCResult   &\textbf{thr}&\GCGet{thr}\GCResult &\textbf{Dodge}&\GCGet{Dodge}\GCResult \\
+    \textbf{HT}&\GCGet{HT}\GCResult& \textbf{FP} &\GCGet{FP}\GCResult     &\textbf{sw}&\GCGet{sw}\GCResult  &\textbf{Parry}& 24
+  \end{tabular}}\\
+  % \textbf{\strut More stats} \gurps@char@secondarycharacteristics\\
+  % \textbf{\strut Even more stats} \gurps@char@properties\\
+  \textbf{\strut Traits} \gurps@char@advantagesanddisadvantages\\[1ex]
+  \textbf{\strut Perks/Quirks} \gurps@char@perksandquirks\\[1ex]
+  \textbf{\strut Skills} \gurps@char@skills\\[1ex]
+  \textbf{\strut Attacks} \gurps@char@attacks
+}
+
+\NewDocumentCommand{\printcharactercard}{m}{
+  \SetCharacterKey{#1}%
+  \def\CharacterName{#1}
+  \luadirect{_GGURPS_CHARACTER_CONFIG.print_points = nil}
+  %
+  \luadirect{%
+    function getlevel(x)
+      if filter({name=x}, get_character(_GCHARACTERKEY)) then
+        return filter({name=x}, get_character(_GCHARACTERKEY))[1].level
+      end
+    end
+
+    function roll()
+      return math.random(1,6) + math.random(1,6) + math.random(1,6)
+    end
+  }%
+  %
+
+  % Defines \drawpic
+  \luadirect{tex_define_draw_pic()}
+  \begin{tikzpicture}[x=1in, y=1in]
+    \draw[draw=none,use as bounding box] (0,0) -- (5, 3);
+
+    % Defined with tex_define_draw_pic() in lua above
+    \drawpic;
+
+    \node[
+      anchor=north west,
+      text centered,
+      outer sep=0pt,
+      inner sep=0.05in
+    ] at (1,3) {%
+      \begin{minipage}[t][2.9in][s]{2.9in}%
+        \raggedright\footnotesize
+        \baselineskip=0pt plus 1fill
+        \lineskiplimit=0pt
+        \lineskip=0pt plus 1fill
+
+        % \begin{wrapfigure}{l}{1in}%
+        %   \includegraphics[width=\linewidth]{saitama.png}%
+        % \end{wrapfigure}
+        \GCCardPrintImportantStuff
+      \end{minipage}%
+    };
+
+    \node[anchor=north west] at (4,3) {%
+      \begin{minipage}[t][3in][s]{1in}
+        \footnotesize
+        \centering
+        \baselineskip=0pt plus 1fill
+        \lineskip=0pt plus 1fill
+        \foreach \i in {1,0,...,-5} {
+          \i xHP: 
+          \parbox[b]{3em}{\raggedleft\luadirect{tex.sprint("" .. (\i * getlevel('HP')))}}
+          \\
+        }
+        \textbf{\Large HP}\\[1ex]
+        \foreach \i in {1,2,...,6} {
+          \rule{0.5cm}{0.3pt}\rule{0.3cm}{0pt}\rule{0.5cm}{0.3pt}\rule{0.3cm}{0pt}\rule{0.5cm}{0.3pt}\\
+        }
+      \end{minipage}
+    };
+  \end{tikzpicture}
+  \luadirect{_GGURPS_CHARACTER_CONFIG.print_points = true}
+  \ResetCharacterKey
+}
+
+
+
+
+

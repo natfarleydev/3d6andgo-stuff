@@ -1,0 +1,82 @@
+\documentclass{article}
+\usepackage[british]{babel}
+
+\usepackage{times}
+
+\usepackage{gurps}
+\usepackage{gurps-npccard}
+
+\begin{document}
+\title{Saitama NPC card from 3d6 and Go!}
+\author{Nathanael Farley\thanks{\SJGamesOnlinePolicyGameAid{Nathanael Farley}}}
+\maketitle
+
+% \getcharacterfromgcx*{saitama}{Saitama}
+\begin{character*}[Saitama]
+\characterpicture{saitama.png}
+\name{Saitama}
+\ST{9999}
+\DX{40}
+\IQ{10}
+\HT{10}
+
+\HP{9999}
+\FP{450} 
+\Per{10}
+\Will{10}
+
+\thr{1001d}
+\sw{1003d}
+
+\basicspeed{375}[7250]
+\basicmove{375}[7250]
+
+
+\advantage{Ally (Genos) (Appears almost all the time)}[3] 
+\advantage{Reputation 2 (Recognized occasionally)}[3] 
+\advantage{Weapon Master (Unarmed)}[20] 
+\advantage{Enhanced Time Sense}[45] 
+\advantage{Regeneration (Extreme)}[150] 
+\advantage{Luck, Ridiculous (Defensive)}[48] 
+
+\advantage{Ally (Mumen Rider) (Appears quite rarely)}[1]
+
+
+\disadvantage{Reputation 3 (Class B Hero, Recognized occasionally)}[-5] 
+\disadvantage{Dependant (Cactus on windowsill)}[-3] 
+\disadvantage{Enemy (Speed-o-sound Sonic) (Appears fairly often; Rival)}[-2] 
+
+\quirk{Ennui about boring life} 
+\quirk{Sensitive about baldness} 
+\quirk{Trademark (kills in a single punch!)} 
+
+
+\skill{Brawling}[1]{40} 
+
+\meleeattack{
+  name={Natural (Kick w/Boots)},
+  level=38,
+  damage={1001d+1 cr},
+  reach={C,1}
+}\meleeattack{
+  name={Natural (Punch)},
+  level=40,
+  damage={1001d-1 cr},
+  reach={C}
+}
+\end{character*}
+
+
+\printcharactercard{Saitama}
+
+\clearpage
+
+\SetCharacterKey{Saitama}
+\GCPrintCharacter
+\ResetCharacterKey
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
