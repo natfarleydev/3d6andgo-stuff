@@ -1,0 +1,78 @@
+\documentclass{article}
+\usepackage[british]{babel}
+
+\usepackage{times}
+
+\usepackage{geometry}
+\usepackage{xparse}
+
+\usepackage{gurps}
+\usepackage{gurps-npccard}
+
+\newcommand{\pokemon}{Pok\'emon\xspace}
+
+\begin{document}
+\title{Ash Ketchum from 3d6 and Go!}
+\author{Nathanael Farley\thanks{\SJGamesOnlinePolicyGameAid{Nathanael Farley}}}
+\maketitle
+
+\getcharacterfromgcx*{ash_ketchum}{Ash Ketchum}
+\getcharacterfromgcx*{pikachu}{Pikachu}
+
+Ash Ketchum from the town of Pallet! \pokemon was a large part of my childhood
+so it was good fun to design him in \gurps. This is mostly based on the TV show,
+but it has a little bit of the game in it.
+
+\section*{Designer's notes}
+\label{sec:designers-notes}
+
+Since there is no official \pokemon adaption for \gurps, designing Ash meant
+defining how a \pokemon game could be played. Most interactions can be boiled
+down to persuasion rolls (e.g.~`persuade' them to get into the pok\'eball to
+capture them, etc.)
+
+For this build, I added a couple of things. First, this wildcard skill:
+\begin{quote}
+  \begin{description}
+  \item[Pokemon Trainer!] Use this skill in place of Animal Handling (All
+    \pokemon), Expert Skill (\pokemon Trainer), rolls to persuade \pokemon and
+    rolls to catch \pokemon.
+  \end{description}
+\end{quote}
+Second, \emph{Reputation} as badges. \pokemon seem to magically recoginise a
+trainer with badges (at least in the game) so if you have sufficient reputation
+and manage to capture a \pokemon, then they will simply obey you. (This can be
+ruled as +4 (Captured) to persuasion roll, but I would probably handwave it.)
+
+\pokemon trainers in the original games had 6 \pokemon which they could carry
+around at a time. I've modelled this as \emph{Modular Abilities (Chip Slots)}
+where each `slot' is actually 8 points of \emph{Ally} (at least it's 8 points at
+Ash's initial level).
+
+\vfill
+\begin{center}
+  \textsc{Next page for NPC cards!}
+\end{center}
+
+
+\clearpage
+\centering
+\vspace*{\fill}
+\printcharactercard{Ash Ketchum}
+\vfill
+\printcharactercard{Pikachu}
+\vfill
+
+
+
+
+
+% \SetCharacterKey{Saitama}
+% \GCPrintCharacter
+% \ResetCharacterKey
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
