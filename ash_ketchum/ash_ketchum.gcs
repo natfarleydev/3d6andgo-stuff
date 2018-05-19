@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="US-ASCII" ?>
 <character id="b4ce933f-d0b1-42ad-9950-760bd5e882d4" version="3">
 	<created_date>18-May-2018</created_date>
-	<modified_date>19-May-2018 08:09</modified_date>
+	<modified_date>19-May-2018 08:30</modified_date>
 	<profile>
 		<player_name>nasfarley88</player_name>
 		<name>Ash Ketchum</name>
@@ -1251,7 +1251,7 @@ es723REe5Onuf3CnT3B2wM6I7IiwpCz/7YLsHb6RB4KDE2wNDBynWFkFzbSzEwzx9Q3rRR7/FZ0O
 			</categories>
 		</advantage>
 		<advantage version="2">
-			<name>Ally (Pidgey)</name>
+			<name>Ally (Pidgeotto)</name>
 			<type>Social</type>
 			<modifier version="1" enabled="no">
 				<name>Point total</name>
