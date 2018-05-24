@@ -1,0 +1,100 @@
+\RequirePackage{xparse}
+\RequirePackage{wrapfig}
+\RequirePackage{luacode}
+\luadirect{require('gurps-npccard.lua')}
+\RequirePackage{tikz}
+\usetikzlibrary{shapes.geometric}
+
+\NewDocumentCommand{\GCCardAttr}{mm}{\parbox{0.23\linewidth}{\textbf{\strut#1:}\hfill
+    \GCGet{#2}\GCResult}}
+\NewDocumentCommand{\GCCardAttrLine}{mmmmmmmm}{%
+  \parbox{\linewidth}{\GCCardAttr{#1}{#2}\hfill\GCCardAttr{#3}{#4}\hfill\GCCardAttr{#5}{#6}%
+   \hfill\GCCardAttr{#7}{#8}}%
+}
+
+\NewDocumentCommand{\GCCardPrintImportantStuff}{}{%
+  \hfill{\Large\bfseries\CharacterName}\hspace*{\fill} \\\ \\
+  \GCCardAttrLine{ST}{ST}{HP}{HP}{DR}{DR}{BS}{Basic Speed}\\
+  \GCCardAttrLine{DX}{DX}{Will}{Will}{SM}{SM}{BM}{Basic Move} \\
+  \GCCardAttrLine{IQ}{IQ}{Per}{Per}{thr}{thr}{Dodge}{Dodge} \\
+  \parbox{\linewidth}{\GCCardAttr{HT}{HT}\hfill\GCCardAttr{FP}{FP}\hfill\GCCardAttr{sw}{sw}\hfill\parbox{0.23\linewidth}{~}}\\\
+  \\
+  \scriptsize
+  \textbf{\strut Traits}\hspace{2ex}\gurps@char@advantagesanddisadvantages\\\ \\
+  % \textbf{\strut Perks/Quirks} \gurps@char@perksandquirks\\\ \\
+  \textbf{\strut Skills}\hspace{2ex}\gurps@char@skills\\\ \\
+  \textbf{\strut Attacks}\hspace{2ex}\gurps@char@attacks
+}
+
+\NewDocumentCommand{\printcharactercard}{m}{
+  \SetCharacterKey{#1}%
+  \def\CharacterName{#1}
+  \luadirect{_GGURPS_CHARACTER_CONFIG.print_points = nil}
+  %
+  \luadirect{%
+    function getlevel(x)
+      if filter({name=x}, get_character(_GCHARACTERKEY)) then
+        return filter({name=x}, get_character(_GCHARACTERKEY))[1].level
+      end
+    end
+
+    function roll()
+      return math.random(1,6) + math.random(1,6) + math.random(1,6)
+    end
+  }%
+  %
+
+  % Defines \drawpic
+  \luadirect{tex_define_draw_pic()}
+  \GCGet{Character picture}[\characterpicture]
+  \begin{tikzpicture}[x=1in, y=1in]
+    \draw[draw,use as bounding box] (0,0) rectangle (5, 3);
+
+    % Defined with tex_define_draw_pic() in lua above
+    % \drawpic;
+
+    \node[
+      anchor=north west,
+      text centered,
+      outer sep=0pt,
+      inner sep=0.05in
+    ] at (0,3) {%
+      \begin{minipage}[t][2.9in][s]{3.9in}%
+        \raggedright\footnotesize
+        % \baselineskip=1ex plus 1fill
+        % \lineskiplimit=0pt
+        % \lineskip=0pt plus 1fill
+
+        \begin{wrapfigure}{l}{1in}%
+          \includegraphics[width=\linewidth]{\characterpicture}%
+        \end{wrapfigure}
+        \GCCardPrintImportantStuff
+      \end{minipage}%
+    };
+
+    \node[anchor=north west] at (4,3) {%
+      \begin{minipage}[t][2.8in][s]{1in}
+        \footnotesize
+        \centering
+        \baselineskip=0pt plus 1fill
+        \lineskip=0pt plus 1fill
+        \foreach \i in {1,0,...,-5} {
+          \i xHP: 
+          \parbox[b]{3em}{\raggedleft\luadirect{tex.sprint("" .. (\i * getlevel('HP')))}}
+          \\
+        }
+        \textbf{\Large HP}\\[1ex]
+        \foreach \i in {1,2,...,6} {
+          \rule{0.5cm}{0.3pt}\rule{0.3cm}{0pt}\rule{0.5cm}{0.3pt}\rule{0.3cm}{0pt}\rule{0.5cm}{0.3pt}\\
+        }
+      \end{minipage}
+    };
+  \end{tikzpicture}
+  \luadirect{_GGURPS_CHARACTER_CONFIG.print_points = true}
+  \ResetCharacterKey
+}
+
+
+
+
+

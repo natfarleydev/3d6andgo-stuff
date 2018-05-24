@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="US-ASCII" ?>
+<character id="1fed3376-4e65-4598-94dc-375ae5d8bd76" version="3">
+	<created_date>21-May-2018</created_date>
+	<modified_date>21-May-2018 07:10</modified_date>
+	<profile>
+		<player_name>nasfarley88</player_name>
+		<name>Retsuko</name>
+		<age>25</age>
+		<birthday>December 7</birthday>
+		<eyes>Brown</eyes>
+		<hair>Blond, Curly, Long</hair>
+		<skin>Light Tan</skin>
+		<handedness>Right</handedness>
+		<height>5' 7"</height>
+		<weight>131 lb</weight>
+		<SM>0</SM>
+		<gender>Female</gender>
+		<race>Red Panda</race>
+		<body_type>humanoid</body_type>
+		<tech_level>3</tech_level>
+	</profile>
+	<HP>0</HP>
+	<FP>0</FP>
+	<total_points>100</total_points>
+	<ST>10</ST>
+	<DX>10</DX>
+	<IQ>12</IQ>
+	<HT>9</HT>
+	<will>2</will>
+	<perception>0</perception>
+	<speed>0</speed>
+	<move>0</move>
+	<include_punch>false</include_punch>
+	<include_kick>false</include_kick>
+	<include_kick_with_boots>false</include_kick_with_boots>
+	<advantage_list>
+		<advantage version="2">
+			<name>Addiction (Metal singing)</name>
+			<type>Mental/Physical</type>
+			<modifier version="1">
+				<name>Cost: Cheap</name>
+				<cost type="points">-5</cost>
+				<affects>total</affects>
+				<reference>B122</reference>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Cost: Expensive</name>
+				<cost type="points">-10</cost>
+				<affects>total</affects>
+				<reference>B122</reference>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Cost: Very Expensive</name>
+				<cost type="points">-20</cost>
+				<affects>total</affects>
+				<reference>B122</reference>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Effects: Hallucinogenic</name>
+				<cost type="points">-10</cost>
+				<affects>total</affects>
+				<reference>B122</reference>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Effects: Highly Addictive (-5 on withdrawal roll)</name>
+				<cost type="points">-5</cost>
+				<affects>total</affects>
+				<reference>B122</reference>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Effects: Incapacitating</name>
+				<cost type="points">-10</cost>
+				<affects>total</affects>
+				<reference>B122</reference>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Effects: Totally Addictive (-10 on withdrawal roll)</name>
+				<cost type="points">-10</cost>
+				<affects>total</affects>
+				<reference>B122</reference>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Illegal</name>
+				<cost type="points">0</cost>
+				<affects>total</affects>
+				<reference>B122</reference>
+			</modifier>
+			<modifier version="1">
+				<name>Legal</name>
+				<cost type="points">5</cost>
+				<affects>total</affects>
+				<reference>B122</reference>
+			</modifier>
+			<reference>B122</reference>
+			<categories>
+				<category>Disadvantage</category>
+			</categories>
+		</advantage>
+		<advantage version="2">
+			<name>Secret (Sings metal)</name>
+			<type>Social</type>
+			<modifier version="1">
+				<name>Serious Embarrassment</name>
+				<cost type="points">-5</cost>
+				<affects>total</affects>
+				<reference>B152</reference>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Utter Rejection</name>
+				<cost type="points">-10</cost>
+				<affects>total</affects>
+				<reference>B152</reference>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Imprisonment</name>
+				<cost type="points">-20</cost>
+				<affects>total</affects>
+				<reference>B152</reference>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Possible Death</name>
+				<cost type="points">-30</cost>
+				<affects>total</affects>
+				<reference>B152</reference>
+			</modifier>
+			<reference>B152</reference>
+			<categories>
+				<category>Disadvantage</category>
+			</categories>
+		</advantage>
+		<advantage version="2">
+			<name>Low Self-Image</name>
+			<type>Mental</type>
+			<base_points>-10</base_points>
+			<reference>B143</reference>
+			<categories>
+				<category>Disadvantage</category>
+			</categories>
+		</advantage>
+		<advantage version="2">
+			<name>Enemy (Ton)</name>
+			<type>Social</type>
+			<modifier version="1" enabled="no">
+				<name>Weak Individual</name>
+				<cost type="points">-5</cost>
+				<affects>total</affects>
+				<reference>B135</reference>
+				<notes>50% of your starting points</notes>
+			</modifier>
+			<modifier version="1">
+				<name>Equal Individual</name>
+				<cost type="points">-10</cost>
+				<affects>total</affects>
+				<reference>B135</reference>
+				<notes>100% of your starting points</notes>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Powerful Individual</name>
+				<cost type="points">-20</cost>
+				<affects>total</affects>
+				<reference>B135</reference>
+				<notes>&gt;150% of your starting points</notes>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Weak Group</name>
+				<cost type="points">-10</cost>
+				<affects>total</affects>
+				<reference>B135</reference>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Medium Group</name>
+				<cost type="points">-20</cost>
+				<affects>total</affects>
+				<reference>B135</reference>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Appears almost all the time</name>
+				<cost type="multiplier">3</cost>
+				<reference>B36</reference>
+				<notes>15-</notes>
+			</modifier>
+			<modifier version="1">
+				<name>Appears quite often</name>
+				<cost type="multiplier">2</cost>
+				<reference>B36</reference>
+				<notes>12-</notes>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Appears fairly often</name>
+				<cost type="multiplier">1</cost>
+				<reference>B36</reference>
+				<notes>9-</notes>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Appears quite rarely</name>
+				<cost type="multiplier">0.5</cost>
+				<reference>B36</reference>
+				<notes>6-</notes>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Large/Powerful Group</name>
+				<cost type="points">-30</cost>
+				<affects>total</affects>
+				<reference>B135</reference>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Utterly Formidable Group</name>
+				<cost type="points">-40</cost>
+				<affects>total</affects>
+				<reference>B135</reference>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Unknown</name>
+				<cost type="points">-5</cost>
+				<affects>total</affects>
+				<reference>B135</reference>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Evil Twin</name>
+				<cost type="points">0</cost>
+				<affects>total</affects>
+				<reference>B135</reference>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Evil Twin</name>
+				<cost type="points">-5</cost>
+				<affects>total</affects>
+				<reference>B135</reference>
+				<notes>More skilled or extra abilities</notes>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Evil Twin</name>
+				<cost type="points">-10</cost>
+				<affects>total</affects>
+				<reference>B135</reference>
+				<notes>More skilled and extra abilities</notes>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Watcher</name>
+				<cost type="multiplier">0.25</cost>
+				<reference>B135</reference>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Rival</name>
+				<cost type="multiplier">0.5</cost>
+				<reference>B135</reference>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Hunter</name>
+				<cost type="multiplier">1</cost>
+				<reference>B135</reference>
+			</modifier>
+			<reference>B135</reference>
+			<categories>
+				<category>Disadvantage</category>
+			</categories>
+		</advantage>
+		<advantage version="2">
+			<name>Ally (Fenneko)</name>
+			<type>Social</type>
+			<modifier version="1" enabled="no">
+				<name>Point total</name>
+				<cost type="points">1</cost>
+				<affects>total</affects>
+				<reference>B37</reference>
+				<notes>25% of your starting points</notes>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Point total</name>
+				<cost type="points">2</cost>
+				<affects>total</affects>
+				<reference>B37</reference>
+				<notes>50% of your starting points</notes>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Point total</name>
+				<cost type="points">3</cost>
+				<affects>total</affects>
+				<reference>B37</reference>
+				<notes>75% of your starting points</notes>
+			</modifier>
+			<modifier version="1">
+				<name>Point total</name>
+				<cost type="points">5</cost>
+				<affects>total</affects>
+				<reference>B37</reference>
+				<notes>100% of your starting points</notes>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Point total</name>
+				<cost type="points">10</cost>
+				<affects>total</affects>
+				<reference>B37</reference>
+				<notes>150% of your starting points</notes>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Appears constantly</name>
+				<cost type="multiplier">4</cost>
+				<reference>B36</reference>
+				<notes>No roll required</notes>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Appears almost all the time</name>
+				<cost type="multiplier">3</cost>
+				<reference>B36</reference>
+				<notes>15-</notes>
+			</modifier>
+			<modifier version="1">
+				<name>Appears quite often</name>
+				<cost type="multiplier">2</cost>
+				<reference>B36</reference>
+				<notes>12-</notes>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Appears fairly often</name>
+				<cost type="multiplier">1</cost>
+				<reference>B36</reference>
+				<notes>9-</notes>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Appears quite rarely</name>
+				<cost type="multiplier">0.5</cost>
+				<reference>B36</reference>
+				<notes>6-</notes>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Group of 6-10</name>
+				<cost type="multiplier">6</cost>
+				<reference>B37</reference>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Group of 11-20</name>
+				<cost type="multiplier">8</cost>
+				<reference>B37</reference>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Group of 21-50</name>
+				<cost type="multiplier">10</cost>
+				<reference>B37</reference>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Group of 51-100</name>
+				<cost type="multiplier">12</cost>
+				<reference>B37</reference>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Group of 101-1000</name>
+				<cost type="multiplier">18</cost>
+				<reference>B37</reference>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Group of 1001-10000</name>
+				<cost type="multiplier">24</cost>
+				<reference>B37</reference>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Group of 10001-100000</name>
+				<cost type="multiplier">30</cost>
+				<reference>B37</reference>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Group of 100001-1000000</name>
+				<cost type="multiplier">36</cost>
+				<reference>B37</reference>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Minion</name>
+				<cost type="percentage">50</cost>
+				<affects>total</affects>
+				<reference>B38</reference>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Minion</name>
+				<cost type="percentage">0</cost>
+				<affects>total</affects>
+				<reference>B38</reference>
+				<notes>IQ 0 or Slave Mentality</notes>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Special Abilities</name>
+				<cost type="percentage">50</cost>
+				<affects>total</affects>
+				<reference>B38</reference>
+				<notes>@Abilities@</notes>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Summonable</name>
+				<cost type="percentage">100</cost>
+				<affects>total</affects>
+				<reference>B38</reference>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Sympathy</name>
+				<cost type="percentage">-25</cost>
+				<affects>total</affects>
+				<reference>B38</reference>
+				<notes>Death of one party reduces the other to 0 HP</notes>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Sympathy</name>
+				<cost type="percentage">-5</cost>
+				<affects>total</affects>
+				<reference>B38</reference>
+				<notes>Death of one party reduces the other to 0 HP and wounds affect ally but not you</notes>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Sympathy</name>
+				<cost type="percentage">-50</cost>
+				<affects>total</affects>
+				<reference>B38</reference>
+				<notes>Death of one party kills the other</notes>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Sympathy</name>
+				<cost type="percentage">-10</cost>
+				<affects>total</affects>
+				<reference>B38</reference>
+				<notes>Death of one party kills the other and wounds affect ally but not you</notes>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Unwilling</name>
+				<cost type="percentage">-50</cost>
+				<affects>total</affects>
+				<reference>B38</reference>
+			</modifier>
+			<modifier version="1" enabled="no">
+				<name>Favor</name>
+				<cost type="multiplier">0.2</cost>
+				<reference>B55</reference>
+			</modifier>
+			<reference>B36</reference>
+			<categories>
+				<category>Advantage</category>
+			</categories>
+		</advantage>
+	</advantage_list>
+	<skill_list>
+		<skill version="2">
+			<name>Accounting</name>
+			<difficulty>IQ/H</difficulty>
+			<points>12</points>
+			<reference>B174</reference>
+			<categories>
+				<category>Business</category>
+			</categories>
+			<default>
+				<type>IQ</type>
+				<modifier>-6</modifier>
+			</default>
+			<default>
+				<type>Skill</type>
+				<name>Finance</name>
+				<modifier>-4</modifier>
+			</default>
+			<default>
+				<type>Skill</type>
+				<name>Mathematics</name>
+				<specialization>Statistics</specialization>
+				<modifier>-5</modifier>
+			</default>
+			<default>
+				<type>Skill</type>
+				<name>Merchant</name>
+				<modifier>-5</modifier>
+			</default>
+		</skill>
+		<skill version="2">
+			<name>Musical Instrument</name>
+			<specialization>Singing</specialization>
+			<difficulty>IQ/H</difficulty>
+			<points>16</points>
+			<reference>B211</reference>
+			<categories>
+				<category>Arts/Entertainment</category>
+			</categories>
+		</skill>
+		<skill version="2">
+			<name>Poetry</name>
+			<difficulty>IQ/A</difficulty>
+			<points>4</points>
+			<reference>B214</reference>
+			<categories>
+				<category>Arts/Entertainment</category>
+			</categories>
+			<default>
+				<type>IQ</type>
+				<modifier>-5</modifier>
+			</default>
+			<default>
+				<type>Skill</type>
+				<name>Writing</name>
+				<modifier>-5</modifier>
+			</default>
+		</skill>
+	</skill_list>
+	<print_settings printer="HP_Photosmart_C4500_series" units="in">
+		<orientation>portrait</orientation>
+		<width>8.267716407775879</width>
+		<height>11.692913055419922</height>
+		<top_margin>0.5</top_margin>
+		<left_margin>0.5</left_margin>
+		<bottom_margin>0.5</bottom_margin>
+		<right_margin>0.5</right_margin>
+		<ink_chromaticity>monochrome</ink_chromaticity>
+		<sides>single</sides>
+		<quality>normal</quality>
+	</print_settings>
+</character>
