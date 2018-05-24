@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+***** BEGIN LICENSE BLOCK *****
+Copyright (c) 1998-2017 by Richard A. Wilkes. All rights reserved.
+
+This Source Code Form is subject to the terms of the Mozilla Public License,
+version 2.0. If a copy of the MPL was not distributed with this file, You
+can obtain one at http://mozilla.org/MPL/2.0/.
+
+This Source Code Form is "Incompatible With Secondary Licenses", as defined
+by the Mozilla Public License, version 2.0.
+***** END LICENSE BLOCK *****
+-->
+<head>
+    <meta charset="utf-8" />
+    <title>Retsuko</title>
+    <style>
+        body {
+            font-family: Verdana, sans-serif;
+            font-size: small;
+            font-weight: normal;
+            padding: 0;
+            margin: .25in;
+            margin-bottom: calc(.25in - 1em);
+        }
+
+        #sheet {
+            display: grid;
+            grid-template:
+                "personal personal"
+                "stats stats"
+                "melee melee"
+                "ranged ranged"
+                "advantages skills"
+                "spells spells"
+                "equipment equipment"
+                "notes notes";
+            grid-gap: .05in;
+        }
+
+        #footer {
+            text-align: center;
+            font-size: 80%;
+        }
+
+        .fieldblock {
+            display: grid;
+            grid-template-columns: 0fr 1fr;
+            align-items: end;
+            padding-bottom: .15em;
+        }
+
+        .fieldblock hr {
+            grid-column: 1 / span 2;
+            width: 100%;
+            border: none;
+            background-color: black;
+            height: 1px;
+            margin: 0;
+            margin-top: .2em;
+            margin-bottom: .1em;
+        }
+
+        #personal {
+            grid-area: personal;
+            display: grid;
+            grid-template:
+                "portrait identity player points"
+                "portrait description description points";
+            grid-template-columns: 0fr 1fr 1fr 0fr;
+            grid-gap: .05in;
+        }
+
+        #portrait {
+            grid-area: portrait;
+            display: grid;
+            grid-template:
+                "header"
+                "portrait";
+            grid-template-rows: 0fr auto;
+            grid-template-columns: auto;
+            border: 1px solid black;
+        }
+
+        .portrait {
+            font-size: medium;
+            width: 6.75em;
+            height: 9em;
+            background-image: url(retsuko.png);
+            background-size: cover;
+        }
+
+        #identity {
+            grid-area: identity;
+        }
+
+        #player {
+            grid-area: player;
+        }
+
+        #points {
+            grid-area: points;
+        }
+
+        #identity, #player, #points, #attributes, #lifting, #fphp {
+            display: grid;
+            grid-template-rows: 0fr 1fr;
+            border: 1px solid black;
+        }
+
+        #points .field,
+        #attributes .field,
+        #lifting .field,
+        #fphp .field {
+            text-align: right;
+        }
+
+        #description {
+            grid-area: description;
+            display: grid;
+            grid-template:
+                "header header header"
+                "block1 block2 block3";
+            grid-template-rows: 0fr 1fr;
+            border: 1px solid black;
+        }
+
+        #description .header {
+            grid-area: header;
+        }
+
+        #description .fieldblock:nth-child(1n+3) {
+            border-left: 1px solid black;
+        }
+
+        #stats {
+            grid-area: stats;
+            display: grid;
+            grid-template:
+                "attributes encumbrance location fphp"
+                "attributes lifting location fphp";
+            grid-template-columns: 0fr 2fr 2fr 1fr;
+            grid-gap: .05in;
+        }
+
+        #attributes {
+            grid-area: attributes;
+        }
+
+        #fphp {
+            grid-area: fphp;
+        }
+
+        #encumbrance {
+            grid-area: encumbrance;
+            grid-template:
+                "header header header header"
+                "enc load move dodge";
+        }
+
+        #lifting {
+            grid-area: lifting;
+            grid-template:
+                "header header"
+                "desc lift";
+            grid-template-columns: 1fr 0fr;
+        }
+
+        #lifting .header:first-child {
+            grid-area: header;
+        }
+
+        #location {
+            grid-area: location;
+            grid-template:
+                "header header header header"
+                "roll where penalty dr";
+            grid-template-rows: 0fr 0fr;
+            grid-auto-rows: 1fr;
+        }
+
+        #encumbrance .header:first-child,
+        #location .header:first-child {
+            grid-area: header;
+            border-bottom: 1px solid lightgray;
+        }
+
+        #encumbrance,
+        #lifting,
+        #location,
+        #melee,
+        #ranged,
+        #advantages,
+        #skills,
+        #spells,
+        #equipment,
+        #notes {
+            display: grid;
+            border: 1px solid black;
+            align-content: stretch;
+        }
+
+        #melee,
+        #ranged,
+        #advantages,
+        #skills,
+        #spells,
+        #equipment,
+        #notes {
+            grid-template-rows: repeat(1000, auto) 1fr;
+        }
+
+        #melee {
+            grid-template-columns: 1fr repeat(8, auto);
+            grid-area: melee;
+        }
+
+        #ranged {
+            grid-template-columns: 1fr repeat(10, auto);
+            grid-area: ranged;
+        }
+
+        #advantages {
+            grid-template-columns: 1fr repeat(2, auto);
+            grid-area: advantages;
+        }
+
+        #skills {
+            grid-template-columns: 1fr repeat(4, auto);
+            grid-area: skills;
+        }
+
+        #spells {
+            grid-template-columns: 1fr repeat(10, auto);
+            grid-area: spells;
+        }
+
+        #equipment {
+            grid-template-columns: auto auto 1fr repeat(6, auto);
+            grid-area: equipment;
+        }
+
+        #notes {
+            grid-template-columns: 1fr;
+            grid-area: notes;
+        }
+
+        .label {
+            text-align: right;
+            padding-left: .2em;
+            padding-right: .2em;
+            font-size: 80%;
+            white-space: nowrap;
+            align-self: center;
+        }
+
+        .field {
+            margin-right: .2em;
+        }
+
+        .field,
+        .desc,
+        .cls,
+        .college,
+        .mana,
+        .mana_maintain,
+        .time,
+        .duration,
+        .sl,
+        .rsl,
+        .qty,
+        .equipped,
+        .cost,
+        .sum_cost,
+        .weight,
+        .sum_weight,
+        .pts,
+        .ref,
+        .usage,
+        .level,
+        .parry,
+        .block,
+        .damage,
+        .reach,
+        .st,
+        .acc,
+        .range,
+        .rof,
+        .shots,
+        .bulk,
+        .rcl,
+        .enc,
+        .load,
+        .move,
+        .dodge,
+        .roll,
+        .where,
+        .penalty,
+        .dr,
+        .liftdesc,
+        .lift {
+            padding-left: .2em;
+            padding-right: .2em;
+            border-bottom: 1px solid lightgray;
+        }
+
+        #encumbrance .enc:nth-last-child(8n+4),
+        #encumbrance .load:nth-last-child(8n+3),
+        #encumbrance .move:nth-last-child(8n+2),
+        #encumbrance .dodge:nth-last-child(8n+1),
+        #lifting .liftdesc:nth-last-child(4n+2),
+        #lifting .lift:nth-last-child(4n+1),
+        #location .roll:nth-last-child(8n+4),
+        #location .where:nth-last-child(8n+3),
+        #location .penalty:nth-last-child(8n+2),
+        #location .dr:nth-last-child(8n+1),
+        #melee .desc:nth-child(even),
+        #melee .usage:nth-child(odd),
+        #melee .level:nth-child(even),
+        #melee .parry:nth-child(odd),
+        #melee .block:nth-child(even),
+        #melee .damage:nth-child(odd),
+        #melee .reach:nth-child(even),
+        #melee .st:nth-child(odd),
+        #ranged .desc:nth-child(even),
+        #ranged .usage:nth-child(odd),
+        #ranged .level:nth-child(even),
+        #ranged .acc:nth-child(odd),
+        #ranged .damage:nth-child(even),
+        #ranged .range:nth-child(odd),
+        #ranged .rof:nth-child(even),
+        #ranged .shots:nth-child(odd),
+        #ranged .bulk:nth-child(even),
+        #ranged .rcl:nth-child(odd),
+        #ranged .st:nth-child(even),
+        #advantages .desc:nth-child(even),
+        #advantages .pts:nth-child(odd),
+        #advantages .ref:nth-child(even),
+        #skills .desc:nth-child(even),
+        #skills .sl:nth-child(odd),
+        #skills .rsl:nth-child(even),
+        #skills .pts:nth-child(odd),
+        #skills .ref:nth-child(even),
+        #spells .desc:nth-child(even),
+        #spells .cls:nth-child(odd),
+        #spells .college:nth-child(even),
+        #spells .mana:nth-child(odd),
+        #spells .mana_maintain:nth-child(even),
+        #spells .time:nth-child(odd),
+        #spells .duration:nth-child(even),
+        #spells .sl:nth-child(odd),
+        #spells .rsl:nth-child(even),
+        #spells .pts:nth-child(odd),
+        #spells .ref:nth-child(even),
+        #equipment .equipped:nth-child(even),
+        #equipment .qty:nth-child(odd),
+        #equipment .desc:nth-child(even),
+        #equipment .cost:nth-child(odd),
+        #equipment .weight:nth-child(even),
+        #equipment .sum_cost:nth-child(odd),
+        #equipment .sum_weight:nth-child(even),
+        #equipment .ref:nth-child(odd),
+        #notes .desc:nth-child(even) {
+            background-color: #e8ffe8;
+        }
+
+        #equipment .desc,
+        .cls,
+        .college,
+        .mana,
+        .mana_maintain,
+        .time,
+        .duration,
+        .sl,
+        .rsl,
+        .qty,
+        .cost,
+        .sum_cost,
+        .weight,
+        .sum_weight,
+        .pts,
+        .ref,
+        .usage,
+        .level,
+        .parry,
+        .block,
+        .damage,
+        .reach,
+        .st,
+        .acc,
+        .range,
+        .rof,
+        .shots,
+        .bulk,
+        .rcl,
+        .load,
+        .move,
+        .dodge,
+        .where,
+        .penalty,
+        .dr {
+            border-left: 1px solid lightgray;
+        }
+
+        .sl,
+        .rsl,
+        .qty,
+        .equipped,
+        .cost,
+        .sum_cost,
+        .weight,
+        .sum_weight,
+        .pts,
+        .ref,
+        .level,
+        .parry,
+        .block,
+        .reach,
+        .st,
+        .acc,
+        .rof,
+        .shots,
+        .bulk,
+        .rcl,
+        .load,
+        .move,
+        .dodge,
+        .where,
+        .penalty,
+        .dr,
+        .liftdesc,
+        .lift {
+            text-align: right;
+        }
+
+        .equipped,
+        .roll {
+            text-align: center;
+        }
+
+        .where {
+            text-align: left;
+        }
+
+        .enc,
+        .load,
+        .move,
+        .dodge,
+        .roll,
+        .where,
+        .penalty,
+        .dr,
+        .liftdesc,
+        .lift {
+            color: rgb(144, 144, 144);
+            white-space: nowrap;
+        }
+
+        #lifting .field,
+        .noedit {
+            color: rgb(144, 144, 144);
+            white-space: nowrap;
+            border: none;
+        }
+
+        #melee > div,
+        #ranged > div,
+        #equipment .sum_cost,
+        #equipment .sum_weight {
+            color: rgb(144, 144, 144);
+        }
+
+        .header,
+        #melee .header,
+        #ranged .header,
+        #equipment .header {
+            background-color: black;
+            border-bottom: 1px solid black;
+            color: white;
+            text-align: center;
+            font-size: 80%;
+        }
+
+        #location .header:nth-last-child(8n+4),
+        #location .header:nth-last-child(8n+3),
+        #location .header:nth-last-child(8n+2),
+        #location .header:nth-last-child(8n+1) {
+            background-color: black;
+        }
+
+        #encumbrance > div:nth-last-child(-n+4),
+        #lifting > div:nth-last-child(-n+2),
+        #location > div:nth-last-child(-n+4) {
+            border-bottom: none;
+        }
+
+        #melee > div:nth-last-child(-n+9),
+        #ranged > div:nth-last-child(-n+11),
+        #advantages > div:nth-last-child(-n+3),
+        #skills > div:nth-last-child(-n+5),
+        #spells > div:nth-last-child(-n+11),
+        #equipment > div:nth-last-child(-n+9),
+        #notes > div:nth-last-child(-n+1) {
+            border-bottom: none;
+            grid-row: 1001;
+        }
+
+        .indent1 {
+            padding-left: 1em;
+        }
+
+        .indent2 {
+            padding-left: 2em;
+        }
+
+        .indent3 {
+            padding-left: 3em;
+        }
+
+        .indent4 {
+            padding-left: 4em;
+        }
+
+        .indent5 {
+            padding-left: 5em;
+        }
+
+        .indent6 {
+            padding-left: 6em;
+        }
+
+        .indent7 {
+            padding-left: 7em;
+        }
+
+        .indent8 {
+            padding-left: 8em;
+        }
+
+        .indent9 {
+            padding-left: 9em;
+        }
+
+        .satisfiedN {
+            color: red;
+        }
+
+        #encumbrance .current:nth-last-child(8n+4),
+        #encumbrance .current:nth-last-child(8n+3),
+        #encumbrance .current:nth-last-child(8n+2),
+        #encumbrance .current:nth-last-child(8n+1),
+        .current {
+            background-color: lightgoldenrodyellow;
+        }
+
+        .list_note {
+            font-size: 80%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="sheet">
+        <div id="personal">
+            <div id="portrait">
+                <div class="header">Portrait</div>
+                <div class="portrait"></div>
+            </div>
+            <div id="identity">
+                <div class="header">Identity</div>
+                <div class="fieldblock">
+                    <div class="label">Name:</div>
+                    <div class="field">Retsuko</div>
+                    <div class="label">Title:</div>
+                    <div class="field"></div>
+                    <div class="label">Religion:</div>
+                    <div class="field"></div>
+                </div>
+            </div>
+            <div id="player">
+                <div class="header">Player Information</div>
+                <div class="fieldblock">
+                    <div class="label">Player:</div>
+                    <div class="field">nasfarley88</div>
+                    <div class="label">Campaign:</div>
+                    <div class="field"></div>
+                    <div class="label">Created On:</div>
+                    <div class="field">21-May-2018</div>
+                </div>
+            </div>
+            <div id="description">
+                <div class="header">Description</div>
+                <div class="fieldblock">
+                    <div class="label">Race:</div>
+                    <div class="field">Red Panda</div>
+                    <div class="label">Gender:</div>
+                    <div class="field">Female</div>
+                    <div class="label">Age:</div>
+                    <div class="field">25</div>
+                    <div class="label">Birthday:</div>
+                    <div class="field">December 7</div>
+                </div>
+                <div class="fieldblock">
+                    <div class="label">Height:</div>
+                    <div class="field">5' 7&quot;</div>
+                    <div class="label">Weight:</div>
+                    <div class="field">131 lb</div>
+                    <div class="label">Size:</div>
+                    <div class="field">+0</div>
+                    <div class="label">TL:</div>
+                    <div class="field">3</div>
+                </div>
+                <div class="fieldblock">
+                    <div class="label">Hair:</div>
+                    <div class="field">Blond, Curly, Long</div>
+                    <div class="label">Eyes:</div>
+                    <div class="field">Brown</div>
+                    <div class="label">Skin:</div>
+                    <div class="field">Light Tan</div>
+                    <div class="label">Hand:</div>
+                    <div class="field">Right</div>
+                </div>
+            </div>
+            <div id="points">
+                <div class="header">100 Points</div>
+                <div class="fieldblock">
+                    <div class="label">Race:</div>
+                    <div class="field noedit">0</div>
+                    <div class="label">Attributes:</div>
+                    <div class="field noedit">40</div>
+                    <div class="label">Advantages:</div>
+                    <div class="field noedit">10</div>
+                    <div class="label">Disadvantages:</div>
+                    <div class="field noedit">-35</div>
+                    <div class="label">Quirks:</div>
+                    <div class="field noedit">0</div>
+                    <div class="label">Skills:</div>
+                    <div class="field noedit">32</div>
+                    <div class="label">Spells:</div>
+                    <div class="field noedit">0</div>
+                    <div class="label">Unspent:</div>
+                    <div class="field">53</div>
+                </div>
+            </div>
+        </div>
+        <div id="stats">
+            <div id="attributes">
+                <div class="header">Attributes</div>
+                <div class="fieldblock">
+                    <div class="label">Strength (ST):</div>
+                    <div class="field">10</div>
+                    <div class="label">Dexterity (DX):</div>
+                    <div class="field">10</div>
+                    <div class="label">Intelligence (IQ):</div>
+                    <div class="field">12</div>
+                    <div class="label">Health (HT):</div>
+                    <div class="field">9</div>
+                    <hr>
+                    <div class="label">Will:</div>
+                    <div class="field">14</div>
+                    <div class="label">Fright Check:</div>
+                    <div class="field noedit">14</div>
+                    <hr>
+                    <div class="label">Basic Speed:</div>
+                    <div class="field">4.75</div>
+                    <div class="label">Basic Move:</div>
+                    <div class="field">4</div>
+                    <hr>
+                    <div class="label">Perception:</div>
+                    <div class="field">12</div>
+                    <div class="label">Vision:</div>
+                    <div class="field noedit">12</div>
+                    <div class="label">Hearing:</div>
+                    <div class="field noedit">12</div>
+                    <div class="label">Taste &amp; Smell:</div>
+                    <div class="field noedit">12</div>
+                    <div class="label">Touch:</div>
+                    <div class="field noedit">12</div>
+                    <hr>
+                    <div class="label">Thrust Damage:</div>
+                    <div class="field noedit">1d-2</div>
+                    <div class="label">Swing Damage:</div>
+                    <div class="field noedit">1d</div>
+                </div>
+            </div>
+            <div id="encumbrance">
+                <div class="header">Encumbrance, Move &amp; Dodge</div>
+                <div class="enc header">Level</div>
+                <div class="load header">Max Load</div>
+                <div class="move header">Move</div>
+                <div class="dodge header">Dodge</div>
+
+                
+                <div class="enc current">&#8226; None (0)</div>
+                <div class="load current">20 lb</div>
+                <div class="move current">4</div>
+                <div class="dodge current">7</div>
+                
+                <div class="enc ">Light (1)</div>
+                <div class="load ">40 lb</div>
+                <div class="move ">3</div>
+                <div class="dodge ">6</div>
+                
+                <div class="enc ">Medium (2)</div>
+                <div class="load ">60 lb</div>
+                <div class="move ">2</div>
+                <div class="dodge ">5</div>
+                
+                <div class="enc ">Heavy (3)</div>
+                <div class="load ">120 lb</div>
+                <div class="move ">1</div>
+                <div class="dodge ">4</div>
+                
+                <div class="enc ">X-Heavy (4)</div>
+                <div class="load ">200 lb</div>
+                <div class="move ">1</div>
+                <div class="dodge ">3</div>
+                
+            </div>
+            <div id="lifting">
+                <div class="header">Lifting &amp; Moving Things</div>
+                <div class="liftdesc">Basic Lift:</div>
+                <div class="lift">20 lb</div>
+                <div class="liftdesc">One-Handed Lift:</div>
+                <div class="lift">40 lb</div>
+                <div class="liftdesc">Two-Handed Lift:</div>
+                <div class="lift">160 lb</div>
+                <div class="liftdesc">Shove &amp; Knock Over:</div>
+                <div class="lift">240 lb</div>
+                <div class="liftdesc">Running Shove &amp; Knock Over:</div>
+                <div class="lift">480 lb</div>
+                <div class="liftdesc">Carry on Back:</div>
+                <div class="lift">300 lb</div>
+                <div class="liftdesc">Shift Slightly:</div>
+                <div class="lift">1,000 lb</div>
+            </div>
+            <div id="location">
+                <div class="header">Hit Location</div>
+                <div class="roll header">Roll</div>
+                <div class="where header">Where</div>
+                <div class="penalty header">Penalty</div>
+                <div class="dr header">DR</div>
+
+                
+                <div class="roll">-</div>
+                <div class="where">Eye</div>
+                <div class="penalty">-9</div>
+                <div class="dr">0</div>
+                
+                <div class="roll">3-4</div>
+                <div class="where">Skull</div>
+                <div class="penalty">-7</div>
+                <div class="dr">2</div>
+                
+                <div class="roll">5</div>
+                <div class="where">Face</div>
+                <div class="penalty">-5</div>
+                <div class="dr">0</div>
+                
+                <div class="roll">6-7</div>
+                <div class="where">Right Leg</div>
+                <div class="penalty">-2</div>
+                <div class="dr">0</div>
+                
+                <div class="roll">8</div>
+                <div class="where">Right Arm</div>
+                <div class="penalty">-2</div>
+                <div class="dr">0</div>
+                
+                <div class="roll">9-10</div>
+                <div class="where">Torso</div>
+                <div class="penalty">0</div>
+                <div class="dr">0</div>
+                
+                <div class="roll">11</div>
+                <div class="where">Groin</div>
+                <div class="penalty">-3</div>
+                <div class="dr">0</div>
+                
+                <div class="roll">12</div>
+                <div class="where">Left Arm</div>
+                <div class="penalty">-2</div>
+                <div class="dr">0</div>
+                
+                <div class="roll">13-14</div>
+                <div class="where">Left Leg</div>
+                <div class="penalty">-2</div>
+                <div class="dr">0</div>
+                
+                <div class="roll">15</div>
+                <div class="where">Hand</div>
+                <div class="penalty">-4</div>
+                <div class="dr">0</div>
+                
+                <div class="roll">16</div>
+                <div class="where">Foot</div>
+                <div class="penalty">-4</div>
+                <div class="dr">0</div>
+                
+                <div class="roll">17-18</div>
+                <div class="where">Neck</div>
+                <div class="penalty">-5</div>
+                <div class="dr">0</div>
+                
+                <div class="roll">-</div>
+                <div class="where">Vitals</div>
+                <div class="penalty">-3</div>
+                <div class="dr">0</div>
+                
+            </div>
+            <div id="fphp">
+                <div class="header">Fatigue / Hit Points</div>
+                <div class="fieldblock">
+                    <div class="label">Current FP:</div>
+                    <div class="field"></div>
+                    <div class="label">Basic FP:</div>
+                    <div class="field">9</div>
+                    <hr>
+                    <div class="label">Tired:</div>
+                    <div class="field noedit">2</div>
+                    <div class="label">Collapse:</div>
+                    <div class="field noedit">0</div>
+                    <div class="label">Unconscious:</div>
+                    <div class="field noedit">-9</div>
+                    <hr>
+                    <div class="label">Current HP:</div>
+                    <div class="field"></div>
+                    <div class="label">Basic HP:</div>
+                    <div class="field">10</div>
+                    <hr>
+                    <div class="label">Reeling:</div>
+                    <div class="field noedit">3</div>
+                    <div class="label">Collapse:</div>
+                    <div class="field noedit">0</div>
+                    <div class="label">Check #1:</div>
+                    <div class="field noedit">-10</div>
+                    <div class="label">Check #2:</div>
+                    <div class="field noedit">-20</div>
+                    <div class="label">Check #3:</div>
+                    <div class="field noedit">-30</div>
+                    <div class="label">Check #4:</div>
+                    <div class="field noedit">-40</div>
+                    <div class="label">Dead:</div>
+                    <div class="field noedit">-50</div>
+                </div>
+            </div>
+        </div>
+        <div id="melee">
+            <div class="desc header">Melee Weapons</div>
+            <div class="usage header">Usage</div>
+            <div class="level header">Lvl</div>
+            <div class="parry header">Parry</div>
+            <div class="block header">Block</div>
+            <div class="damage header">Damage</div>
+            <div class="reach header">Reach</div>
+            <div class="st header">ST</div>
+            <div></div>
+
+            
+        </div>
+        <div id="ranged">
+            <div class="desc header">Ranged Weapons</div>
+            <div class="usage header">Usage</div>
+            <div class="level header">Lvl</div>
+            <div class="acc header">Acc</div>
+            <div class="damage header">Damage</div>
+            <div class="range header">Range</div>
+            <div class="rof header">RoF</div>
+            <div class="shots header">Shots</div>
+            <div class="bulk header">Bulk</div>
+            <div class="rcl header">Rcl</div>
+            <div class="st header">ST</div>
+
+            
+        </div>
+        <div id="advantages">
+            <div class="desc header">Advantages, Disadvantages, Perks &amp; Quirks</div>
+            <div class="pts header">Pts</div>
+            <div class="ref header">Ref</div>
+
+            
+            <div class="desc indent0 satisfiedY">Addiction (Metal singing)
+                <div class="list_note satisfiedY">Cost: Cheap, -5; Legal, +5.</div>
+                <div class="list_note satisfiedY"></div>
+            </div>
+            <div class="pts satisfiedY">0</div>
+            <div class="ref satisfiedY">B122</div>
+            
+            <div class="desc indent0 satisfiedY">Secret (Sings metal)
+                <div class="list_note satisfiedY">Serious Embarrassment, -5.</div>
+                <div class="list_note satisfiedY"></div>
+            </div>
+            <div class="pts satisfiedY">-5</div>
+            <div class="ref satisfiedY">B152</div>
+            
+            <div class="desc indent0 satisfiedY">Low Self-Image
+                <div class="list_note satisfiedY"></div>
+                <div class="list_note satisfiedY"></div>
+            </div>
+            <div class="pts satisfiedY">-10</div>
+            <div class="ref satisfiedY">B143</div>
+            
+            <div class="desc indent0 satisfiedY">Enemy (Ton)
+                <div class="list_note satisfiedY">Equal Individual (100% of your starting points), -10; Appears quite often (12-), x2.</div>
+                <div class="list_note satisfiedY"></div>
+            </div>
+            <div class="pts satisfiedY">-20</div>
+            <div class="ref satisfiedY">B135</div>
+            
+            <div class="desc indent0 satisfiedY">Ally (Fenneko)
+                <div class="list_note satisfiedY">Point total (100% of your starting points), +5; Appears quite often (12-), x2.</div>
+                <div class="list_note satisfiedY"></div>
+            </div>
+            <div class="pts satisfiedY">10</div>
+            <div class="ref satisfiedY">B36</div>
+            
+        </div>
+        <div id="skills">
+            <div class="desc header">Skills</div>
+            <div class="sl header">SL</div>
+            <div class="rsl header">RSL</div>
+            <div class="pts header">Pts</div>
+            <div class="ref header">Ref</div>
+
+            
+            <div class="desc indent0 satisfiedY">Accounting
+                <div class="list_note satisfiedY"></div>
+                <div class="list_note satisfiedY"></div>
+            </div>
+            <div class="sl satisfiedY">14</div>
+            <div class="rsl satisfiedY">IQ+2</div>
+            <div class="pts satisfiedY">12</div>
+            <div class="ref satisfiedY">B174</div>
+            
+            <div class="desc indent0 satisfiedY">Musical Instrument (Singing)
+                <div class="list_note satisfiedY"></div>
+                <div class="list_note satisfiedY"></div>
+            </div>
+            <div class="sl satisfiedY">15</div>
+            <div class="rsl satisfiedY">IQ+3</div>
+            <div class="pts satisfiedY">16</div>
+            <div class="ref satisfiedY">B211</div>
+            
+            <div class="desc indent0 satisfiedY">Poetry
+                <div class="list_note satisfiedY"></div>
+                <div class="list_note satisfiedY"></div>
+            </div>
+            <div class="sl satisfiedY">13</div>
+            <div class="rsl satisfiedY">IQ+1</div>
+            <div class="pts satisfiedY">4</div>
+            <div class="ref satisfiedY">B214</div>
+            
+        </div>
+        <div id="spells">
+            <div class="desc header">Spells</div>
+            <div class="cls header">Class</div>
+            <div class="college header">College</div>
+            <div class="mana header">Cost</div>
+            <div class="mana_maintain header">Maintain</div>
+            <div class="time header">Time</div>
+            <div class="duration header">Duration</div>
+            <div class="sl header">SL</div>
+            <div class="rsl header">RSL</div>
+            <div class="pts header">Pts</div>
+            <div class="ref header">Ref</div>
+
+            
+        </div>
+        <div id="equipment">
+            <div class="equipped header">◈</div>
+            <div class="qty header">Qty</div>
+            <div class="desc header">Equipment (0 lb; $0)</div>
+            <div class="cost header">$</div>
+            <div class="weight header">lbs</div>
+            <div class="sum_cost header">∑ $</div>
+            <div class="sum_weight header">∑ lbs</div>
+            <div class="ref header">Ref</div>
+            <div></div>
+
+            
+        </div>
+        <div id="notes">
+            <div class="desc header">Notes</div>
+
+            
+        </div>
+    </div>
+    <div id="footer">Copyright ©1998-2017 by Richard A. Wilkes • All rights reserved •
+        <a href="http://gurpscharactersheet.com">http://gurpscharactersheet.com</a>
+    </div>
+</body>
+
+</html>

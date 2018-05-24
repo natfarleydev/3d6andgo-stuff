@@ -24,16 +24,23 @@
 \NewDocumentCommand{\occurence}{m}{\def\card@occurence{#1}}
 \NewDocumentCommand{\relationship}{m}{\def\card@relationship{#1}}
 \NewDocumentCommand{\enemy}{}{\def\card@bgcolor{red!30}}
-\NewDocumentCommand{\ally}{}{\def\card@bgcolor{green!30}}
+\NewDocumentCommand{\ally}{}{\def\card@bgcolor{blue!30!white}}
 \NewDocumentEnvironment{card}{m}{%
     \SetCharacterKey{#1}%
     % Do not print points!
     \luadirect{_GGURPS_CHARACTER_CONFIG.print_points = nil}
   }{
+    \GCGet{Name}[\charactername]
     \begin{tikzpicture}[x=1in,y=1in]
       \draw[use as bounding box,rounded corners,fill=\card@bgcolor] (0,0) rectangle (2.5,3.5);
-      \node at (1.25, 3) {\card@picture};
-      \node[anchor=south east, inner sep=0.1in] at (2.5, 2.5) {\scalebox{4}{\card@occurence}};
+      \draw[rounded corners,fill=white,outer sep=0.1in] (0.1,0.1) rectangle (2.4,3.4) node (white box) {};
+
+      % \node[anchor=north] at (1.25, 3.5) {\card@picture};
+      % \node[anchor=south east, inner sep=0.1in] at (2.5, 2.5) %
+      %   {\scalebox{4}{\card@occurence}};
+      % \node[anchor=south east, inner sep=0.1in,align=center,anchor=center] at (2.5, 2.5) %
+      %   {O\\c\\c\\u\\r\\e\\n\\c\\e};
+      \node[anchor=north] at (1.25,3.2) {\card@picture};
       \node[%
         anchor=south west,%
         inner sep=0.1in,%
@@ -41,9 +48,10 @@
         rounded corners,%
         outer sep=0.1in,%
         fill=white!40!\card@bgcolor%
-      ] at (0,0) {
+      ] (info) at (0,0) {
         \begin{minipage}{2.1in}%
           \begin{center}
+            \emph{Occurence}: \card@occurence\ or less\\
             \emph{Relationship}: \card@relationship
           \end{center}
           \cardattr{Will}{Will}\hfill\cardattr{ST}{ST}
@@ -53,15 +61,18 @@
           \textbf{Skills}: \gurps@char@skills \\
           \hspace*{\fill}\rule{1.5in}{0.3pt}\hspace*{\fill}\\
           \emph{Action}:\hspace{1em}\card@action
-          \ResetCharacterKey
+          % \ResetCharacterKey
         \end{minipage}
       };
+      % \path (1.25,3.4) -- (info.north) node[midway] {\card@picture};
+      \node[draw, rounded corners, fill=white!30!\card@bgcolor] at (1.25,3.3) {\Large\bfseries\charactername};
   \end{tikzpicture}
   % Print points again
   \luadirect{_GGURPS_CHARACTER_CONFIG.print_points = true}
 }
 % \NewDocumentCommand{\cardpicture}{m}{\fbox{#1}\\}
-\NewDocumentCommand{\cardpicture}{m}{\makeatletter\def\card@picture{\fbox{#1}}\makeatother}
+% \NewDocumentCommand{\cardpicture}{m}{\makeatletter\def\card@picture{\fbox{#1}}\makeatother}
+\NewDocumentCommand{\cardpicture}{m}{\makeatletter\def\card@picture{\includegraphics[width=1.0in]{#1.png}}\makeatother}
 \makeatother
 
 \begin{document}
@@ -74,12 +85,15 @@
 \printcharactercard{Retsuko}
 
 \begin{character*}[Fenneko]
-  \quirk{Deadpan voice}
+  \name{Fenneko}
+  \disadvantage{Disturbing Voice}
   \skill{Finance}{12}
   \skill{Fast Talk}{12}
 \end{character*}
 \begin{character*}[Ton]
+  \name{Ton}
   \ST{15}
+  \HT{8}
   \DX{8}
   \Will{11}
   \quirk{Literally a pig}
@@ -90,6 +104,7 @@
 \end{character*}
 
 \def\tsunoda{
+  \name{Tsunoda}
   \quirk{Flirts with the boss}
   \skill{Fast Talk}{12}
   \skill{Carousing}{14}
@@ -100,24 +115,28 @@
 \begin{character*}[Tsunoda (Ally)]
   \tsunoda
 \end{character*}
-\begin{character*}[Haida]
+\begin{character*}[Tsubone]
+  \name{Tsubone}
   \IQ{11}
   \quirk{Lizard tongue}
   \skill{Intimidation}{12}
 \end{character*}
 \begin{character*}[Gori]
+  \name{Gori}
   \ST{18} 
   \IQ{12}
   \Will{12}
   \quirk{Tells it like it is}
 \end{character*}
 \begin{character*}[Washimi]
+  \name{Washimi}
   \ST{18} 
   \IQ{12}
   \Will{16}
   \quirk{Tells it like it is}
 \end{character*}
 \begin{character*}[Kabae]
+  \name{Kabae}
   \IQ{12} \ST{12}
   \skill{Detect Lies}{12}
   \skill{Fast Talk}{13}
@@ -128,45 +147,48 @@
   \ally
   \occurence{12}
   \relationship{Friend}
-  \cardpicture{Fenneko}
+  \cardpicture{fenneko}
   \action{Use Fast Talk vs.\ enemy Will to make an excuse for
 Retsuko.}
 \end{card}
-\begin{card}{Ton}
-  \enemy
-  \occurence{15}
-  \relationship{Manager}
-  \cardpicture{Ton}
-  \action{Use Initmidation vs.\ Will to give a difficult job using the Finance skill.}
+\begin{card}{Tsunoda (Ally)}
+  \ally
+  \occurence{6}
+  \cardpicture{tsunoda}
+  \relationship{Co-worker}
+  \action{Introduces Retsuko to new people with Carousing
+    (\GCGet{Carousing}\GCResult) vs.\ Retsuko's
+    Will. (On failure, Retsuko freaks out and leaves.)}
 \end{card}
+\vfill
 
-\begin{card}{Haida}
-  \enemy
-  \cardpicture{Haida}
-  \occurence{9}
-  \action{Use Intimidation vs.\ Will to give additional \emph{pointless} work.
-    Must specify an attribute for the task (e.g.~ST for opening a jar!)}
-  \relationship{Manager, but under Ton}
+\begin{card}{Washimi}
+  \ally
+  \occurence{6}
+  \cardpicture{washimi}
+  \relationship{Friend from Yoga; secretary to company president}
+  \action{Roll Will (\GCGet{Will}\GCResult) vs.\ 10. On success, the company boss does \emph{whatever}
+    Washimi wants (including intimidating Ton)!}
 \end{card}
 \begin{card}{Gori}
   \ally
   \occurence{6}
-  \cardpicture{Gori}
+  \cardpicture{gori}
   \relationship{Friend from Yoga; Director of Marketing}
   \action{When paired with Washimi, takes Retsuko to the karaoke place and
     erases all stress tokens.}
 \end{card}
 
-\begin{card}{Washimi}
-  \ally
-  \occurence{6}
-  \cardpicture{Washimi}
-  \relationship{Friend from Yoga; secretary to company president}
-  \action{Roll Will (\GCGet{Will}\GCResult) vs.\ 10. On success, the company boss does \emph{whatever}
-    Washimi wants (including intimidating Ton)!}
+\begin{card}{Tsubone}
+  \enemy
+  \cardpicture{tsubone}
+  \occurence{9}
+  \action{Use Intimidation vs.\ Will to give additional \emph{pointless} work.
+    Must specify an attribute for the task (e.g.~ST for opening a jar!)}
+  \relationship{Manager, but under Ton}
 \end{card}
 \begin{card}{Tsunoda (Enemy)}
-  \cardpicture{Tsunoda}
+  \cardpicture{tsunoda}
   \occurence{9}
   \enemy
   \relationship{Co-worker}
@@ -174,20 +196,19 @@ Retsuko.}
     Will (\SetCharacterKey{Ton}\GCGet{Will}\GCResult\SetCharacterKey{Tsunoda
       (Enemy)}) to give Retsuko \emph{additional} work.}
 \end{card}
+\vfill
 
-\begin{card}{Tsunoda (Ally)}
-  \ally
-  \occurence{6}
-  \cardpicture{Tsunoda}
-  \relationship{Co-worker}
-  \action{Introduces Retsuko to new people with Carousing
-    (\GCGet{Carousing}\GCResult) vs.\ Retsuko's
-    Will. (On failure, Retsuko freaks out and leaves.)}
+\begin{card}{Ton}
+  \enemy
+  \occurence{15}
+  \relationship{Manager}
+  \cardpicture{ton}
+  \action{Use Initmidation vs.\ Will to give a difficult job using the Finance skill.}
 \end{card}
 \begin{card}{Kabae}
   \enemy
   \occurence{9}
-  \cardpicture{Kabae}
+  \cardpicture{kabae}
   \relationship{Co-worker}
   \action{Fast Talk vs.\ Retsuko's Will to find out a secret about Retsuko.}
 \end{card}
