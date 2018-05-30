@@ -1,0 +1,382 @@
+\documentclass[onepage]{memoir}
+\usepackage[british]{babel}
+
+\usepackage{luacode}
+\luadirect{require('main.lua')}
+\usepackage{times}
+\usepackage{tcolorbox}
+\usepackage{microtype}
+\usepackage{multicol}
+\usepackage{tikz}
+\usetikzlibrary{shapes.misc}
+\usetikzlibrary{external}
+\tikzexternalize[prefix=tikz/,up to date check=simple]
+
+\usepackage{geometry}
+\usepackage{xparse}
+
+\usepackage{gurps}
+\usepackage{gurps-npccard}
+
+\NewDocumentCommand{\ton}{}{\mbox{Ton\hspace{2pt}\raisebox{-0.4ex}{\includegraphics[height=1em]{ton.png}}}\xspace}
+\NewDocumentCommand{\tons}{}{\mbox{Ton's\hspace{2pt}\raisebox{-0.4ex}{\includegraphics[height=1em]{ton.png}}}\xspace}
+\NewDocumentCommand{\retsuko}{}{\mbox{Retsuko\hspace{2pt}\raisebox{-0.4ex}{\includegraphics[height=1em]{retsuko.png}}}\xspace}
+\NewDocumentCommand{\retsukos}{}{\mbox{Retsuko's\hspace{2pt}\raisebox{-0.4ex}{\includegraphics[height=1em]{retsuko.png}}}\xspace}
+\NewDocumentCommand{\tsubone}{}{\mbox{Tsubone\hspace{2pt}\raisebox{-0.4ex}{\includegraphics[height=1em]{tsubone.png}}}\xspace}
+\NewDocumentCommand{\tsubones}{}{\mbox{Tsubone's\hspace{2pt}\raisebox{-0.4ex}{\includegraphics[height=1em]{tsubone.png}}}\xspace}
+\NewDocumentCommand{\kabae}{}{\mbox{Kabae\hspace{2pt}\raisebox{-0.4ex}{\includegraphics[height=1em]{kabae.png}}}\xspace}
+\NewDocumentCommand{\kabaes}{}{\mbox{Kabae's\hspace{2pt}\raisebox{-0.4ex}{\includegraphics[height=1em]{kabae.png}}}\xspace}
+\NewDocumentCommand{\fenneko}{}{\mbox{Fenneko\hspace{2pt}\raisebox{-0.4ex}{\includegraphics[height=1em]{fenneko.png}}}\xspace}
+\NewDocumentCommand{\fennekos}{}{\mbox{Fenneko's\hspace{2pt}\raisebox{-0.4ex}{\includegraphics[height=1em]{fenneko.png}}}\xspace}
+
+% Footer
+\luadirect{require('buildings.lua')}
+\newcommand\randombuildling{\luadirect{
+    if math.random() < tree_decay_function(_GLASTTREE) then
+      local scale_factor = math.random()*0.3
+      % print("I'm printing a tree!!! With a scale factor: " .. scale_factor)
+      tex_tree(0.4+(math.random()*0.3))
+      set_last_tree()
+    else
+      tex_building(
+        math.random(6) + math.random(6) + math.random(6)
+      )
+      add_to_last_tree()
+    end
+    % Add to when the last tree was
+  }}
+\newcommand{\building}[1]{\luadirect{tex_building(math.random(#1))}}
+\newcommand\buildings{\foreach \i in {1,...,12} {%
+  \randombuildling{}\hspace{2pt}%
+}\randombuildling{}}
+
+\makepagestyle{buildingsfooter}
+\newcommand{\buildingsfooterfooter}{
+  \centering%
+  \buildings%
+  \hspace{6pt}%
+  % Disable external because page numbers often change between runs and the
+  % externalise package doesn't understand what to do if this happens
+  %
+  % Side note: this could happen with magic buildings in the footer, if so I'll
+  % need to generate them manually using the makefile which could get ... tricky.
+  \tikzexternaldisable%
+  \tikz \node[minimum width=1.5em,minimum height=1.5em,draw] {\strut\thepage};%
+  \tikzexternalenable%
+  \hspace{6pt}%
+  \buildings
+}
+
+\makeoddfoot{buildingsfooter}{}{\buildingsfooterfooter}{}
+\makeevenfoot{buildingsfooter}{}{\buildingsfooterfooter}{}
+\pagestyle{buildingsfooter}
+
+
+% memoir settings
+\setsecnumdepth{chapter}
+
+\NewDocumentCommand{\cardattr}{mm}{\parbox{0.9in}{\strut\textbf{#1:}\hfill\GCGet{#2}\GCResult}}
+\makeatletter
+\def\card@picture{}
+\def\card@action{}
+\def\card@relationship{}
+\def\card@occurence{0}
+\def\card@bgcolor{black!20}
+\NewDocumentCommand{\action}{m}{\def\card@action{#1}}
+\NewDocumentCommand{\occurence}{m}{\def\card@occurence{#1}}
+\NewDocumentCommand{\relationship}{m}{\def\card@relationship{#1}}
+\NewDocumentCommand{\enemy}{}{\def\card@bgcolor{red!30}}
+\NewDocumentCommand{\ally}{}{\def\card@bgcolor{blue!30!white}}
+\NewDocumentEnvironment{card}{m}{%
+    \SetCharacterKey{#1}%
+    % Do not print points!
+    \luadirect{_GGURPS_CHARACTER_CONFIG.print_points = nil}
+  }{
+    \GCGet{Name}[\charactername]
+    \luadirect{tex_set_card_name(\luastring{#1})}
+    \begin{tikzpicture}[x=1in,y=1in]
+      \draw[use as bounding box,rounded corners,fill=\card@bgcolor] (0,0) rectangle (2.5,3.5);
+      \draw[rounded corners,fill=white,outer sep=0.1in] (0.1,0.1) rectangle (2.4,3.4) node (white box) {};
+
+      % \node[anchor=north] at (1.25, 3.5) {\card@picture};
+      % \node[anchor=south east, inner sep=0.1in] at (2.5, 2.5) %
+      %   {\scalebox{4}{\card@occurence}};
+      % \node[anchor=south east, inner sep=0.1in,align=center,anchor=center] at (2.5, 2.5) %
+      %   {O\\c\\c\\u\\r\\e\\n\\c\\e};
+      \node[anchor=north] at (1.25,3.2) {\card@picture};
+      \node[%
+        anchor=south west,%
+        inner sep=0.1in,%
+        draw,%
+        rounded corners,%
+        outer sep=0.1in,%
+        fill=white!40!\card@bgcolor%
+      ] (info) at (0,0) {
+        \begin{minipage}{2.1in}%
+          \begin{center}
+            \emph{Occurence}: \card@occurence\ or less\\
+            \emph{Relationship}: \card@relationship
+          \end{center}
+          \cardattr{Will}{Will}\hfill\cardattr{ST}{ST}
+          \cardattr{IQ}{IQ}\hfill\cardattr{DX}{DX}
+          \cardattr{HT}{HT}\hfill\cardattr{Per}{Per}\\
+          \textbf{Traits}: \gurps@char@traits\\
+          \textbf{Skills}: \gurps@char@skills \\
+          \hspace*{\fill}\rule{1.5in}{0.3pt}\hspace*{\fill}\\
+          \emph{Action}:\hspace{1em}\card@action
+          % \ResetCharacterKey
+        \end{minipage}
+      };
+      % \path (1.25,3.4) -- (info.north) node[midway] {\card@picture};
+      \node[draw, rounded corners, fill=white!30!\card@bgcolor] at (1.25,3.3) {\Large\bfseries\charactername};
+  \end{tikzpicture}
+  % Print points again
+  \luadirect{_GGURPS_CHARACTER_CONFIG.print_points = true}
+}
+% \NewDocumentCommand{\cardpicture}{m}{\fbox{#1}\\}
+% \NewDocumentCommand{\cardpicture}{m}{\makeatletter\def\card@picture{\fbox{#1}}\makeatother}
+\NewDocumentCommand{\cardpicture}{m}{\makeatletter\def\card@picture{\includegraphics[width=1.0in]{#1.png}}\makeatother}
+\makeatother
+
+
+\begin{character*}[Fenneko]
+  \name{Fenneko}
+  \disadvantage{Disturbing Voice}
+  \skill{Finance}{12}
+  \skill{Fast Talk}{12}
+\end{character*}
+\begin{character*}[Ton]
+  \name{Ton}
+  \ST{15}
+  \HT{8}
+  \DX{8}
+  \Will{11}
+  \quirk{Literally a pig}
+  \quirk{Red eyes}
+  % TODO check spelling
+  \advantage{Lightening Calculator}
+  \skill{Intimidation}{12}
+\end{character*}
+
+\def\tsunoda{
+  \name{Tsunoda}
+  \quirk{Flirts with the boss}
+  \skill{Fast Talk}{12}
+  \skill{Carousing}{14}
+}
+\begin{character*}[Tsunoda (Enemy)]
+  \tsunoda
+\end{character*}
+\begin{character*}[Tsunoda (Ally)]
+  \tsunoda
+\end{character*}
+\begin{character*}[Tsubone]
+  \name{Tsubone}
+  \IQ{11}
+  \quirk{Lizard tongue}
+  \skill{Intimidation}{12}
+\end{character*}
+\begin{character*}[Gori]
+  \name{Gori}
+  \ST{18} 
+  \IQ{12}
+  \Will{12}
+  \quirk{Tells it like it is}
+\end{character*}
+\begin{character*}[Washimi]
+  \name{Washimi}
+  \ST{18} 
+  \IQ{12}
+  \Will{16}
+  \quirk{Tells it like it is}
+\end{character*}
+\begin{character*}[Kabae]
+  \name{Kabae}
+  \IQ{12} \ST{12}
+  \skill{Detect Lies}{12}
+  \skill{Fast Talk}{13}
+  \quirk{Loves gossip}
+\end{character*}
+
+\luadirect{math.randomseed(9001)}
+
+\begin{document}
+\title{Retsuko from 3d6 and Go!}
+\author{Nathanael Farley\thanks{\SJGamesOnlinePolicyGameAid{Nathanael Farley}}}
+\maketitle
+\clearpage
+
+
+
+\begin{multicols}{2}
+  \begin{figure*}[b]
+    \centering
+    \begin{tcolorbox}[title={What is `GURPS'?}]
+      \gurps is the Generic Universal Role-Playing System.
+      \begin{description}
+      \item[Roll against] Roll 3d6 against a target number. If the 3d6 is equal
+        to or less than the target number, you pass. If not, you fail!
+      \item[Roll vs] When two characters must roll at the same time, you roll a
+        \emph{quick contest}. Each character rolls 3d6 and quotes how much they
+        won by (i.e.~their \emph{margin of success}). If the attacking player
+        fails the roll, the action fails. Otherwise, the player with the greatest margin
+        of success wins the contest!
+      \end{description}
+    \end{tcolorbox}
+  \end{figure*}
+\section{Requirements}
+\label{sec:requirements}
+
+
+\begin{itemize}
+\item 2--3 players (1--2 GMs, 1 player)
+\item \gurps rules (\gurpsbook{Lite} should be fine)
+\item \retsuko character card (see pdf below)
+\item Aggretsuko NPC cards (see pdf below)
+\item 10 Tokens representing stress (a Google spreadsheet should be fine)
+\item 3 Tokens representing character points (for use as \gurpsbook{Power-Ups 5: Impulse Buys})
+\end{itemize}
+
+\section{The Aim}
+\label{sec:aim}
+
+Poor \retsuko is having a hard time of life! Every day she has two goals:
+
+\begin{tabular}{p{0.9\linewidth}}
+    NOT reveal her metal alter-ego to the world \\
+    ???
+\end{tabular}
+
+Every day, her second goal changes. Does she need to 'Fall in love'? Or maybe she feels the need to 'Quash rumours of her pregnancy'? Whatever the goal, she must achieve these by the end of the day, or else!
+
+\section{5 story rounds}
+\label{sec:5-story-rounds}
+
+
+The game is played in five story rounds. At the beginning of each round, the GMs roll to see which of \retsukos allies and enemies appear. Each NPC may take a single, quick contest, action (e.g. giving \retsuko more work, taking her to a mixer, etc.). This action may lead to more rolls on \retsukos part, e.g. completing given work or impressing someone at the mixer.
+
+\section{Stress!}
+\label{sec:stress}
+
+
+Life is stressful! When \retsuko fails any roll or quick contest, she gains a stress token which reduces her Will by 1. If someone wins a quick contest against her, she must immediately roll Will to not burst out into death metal screaming.
+
+If she wishes, Restuko can spend a character point to change a failure to success. In doing so, the player should narrate the way she takes it (usually heading to the bathroom and screaming to death metal). There are only 3 character points per game, so they should be used wisely!
+
+When \retsukos stress hits 10 (i.e. Will-10) any failure automatically triggers her death metal singing.
+
+\section{Example game}
+\label{sec:example-game}
+
+
+Alice, Bob and Charles set up a game. Alice is the ally GM, Bob is the enemy GM and Charles is playing Restuko. Together, they agree that \retsukos second goal should be 'Finding another job without \ton, her boss, finding out.'
+
+They roll their first round with the following results:
+\begin{itemize}
+\item Alice rolls \fenneko
+\item Bob rolls \ton and \tsubone
+\end{itemize}
+
+Alice and Bob decide that \ton takes the first action. He  gives \retsuko an unreasonable stack of work! This is a quick contest between \tons Intimidation (12) and Restuko's Will (14). \retsuko wins by 3 and politely takes the work without screaming.
+
+Since Alice is worried about what Bob will do, she lets Bob go next with \tsubone. \tsubone then tries to give \retsuko even more work but Alice steps in with \fenneko uses her action to make an excuse! A quick contest of \fennekos Fast Talk with \tsubones Will and \fenneko wins. \fenneko tells a tale of how Retusko has a serious doctor's appointment and couldn't possibly have more on her plate right now. \tsubone believes her, so leaves \retsuko alone!
+
+Charles then rolls to see if \retsuko completes the task using Finance (12), but fails! This adds a stress token and means \retsukos next Will roll will be at 13.
+
+A couple of rounds later, \retsukos Will is at 10, and \kabae appears asking if it's true that \retsuko is looking for a new job. If \kabae finds out, it's only a matter of time before \ton knows. If \retsuko is going to get through today, she needs to win this. A quick contest between \kabaes Fast Talk (13) and \retsukos Will (10), and \retsuko fails! This triggers a concentration roll not to sing \ldots{} and she fails again!
+
+\begin{center}
+  *cue music*\\
+  \emph{WHY DO YOU KNOW HOW TO PERSUADE! YOUR STUPID HEAD LOOKS LIKE A SPADE!!!}
+\end{center}
+\retsuko reveals herself as a death metal singer and loses! Oh well, better luck next time \retsuko!
+\end{multicols}
+x \dotfill x 
+\clearpage
+
+\getcharacterfromgcx*{retsuko}{Retsuko}
+\printcharactercard{Retsuko}
+
+\clearpage
+
+\clearpage
+\begin{card}{Fenneko}
+  \ally
+  \occurence{12}
+  \relationship{Friend}
+  \cardpicture{fenneko}
+  \action{Use Fast Talk vs.\ enemy Will to make an excuse for
+Retsuko.}
+\end{card}
+\begin{card}{Tsunoda (Ally)}
+  \ally
+  \occurence{6}
+  \cardpicture{tsunoda}
+  \relationship{Co-worker}
+  \action{Introduces Retsuko to new people with Carousing
+    (\GCGet{Carousing}\GCResult) vs.\ Retsuko's
+    Will. (On failure, Retsuko freaks out and leaves.)}
+\end{card}
+\vfill
+
+\begin{card}{Washimi}
+  \ally
+  \occurence{6}
+  \cardpicture{washimi}
+  \relationship{Friend from Yoga; secretary to company president}
+  \action{Roll Will (\GCGet{Will}\GCResult) vs.\ 10. On success, the company boss does \emph{whatever}
+    Washimi wants (including intimidating \ton)!}
+\end{card}
+\begin{card}{Gori}
+  \ally
+  \occurence{6}
+  \cardpicture{gori}
+  \relationship{Friend from Yoga; Director of Marketing}
+  \action{When paired with Washimi, takes Retsuko to the karaoke place and
+    erases all stress tokens.}
+\end{card}
+\clearpage
+\begin{card}{Tsubone}
+  \enemy
+  \occurence{9}
+  \cardpicture{tsubone}
+  \action{Use Intimidation vs.\ Will to give additional \emph{pointless} work.
+    Must specify an attribute for the task (e.g.~ST for opening a jar!)}
+  \relationship{Manager, but under \ton}
+\end{card}
+\begin{card}{Tsunoda (Enemy)}
+  \enemy
+  \occurence{9}
+  \cardpicture{tsunoda}
+  \relationship{Co-worker}
+  \action{Sucks up to \ton with Fast Talk (\GCGet{Fast Talk}\GCResult) vs.\ Ton's
+    Will (\SetCharacterKey{Ton}\GCGet{Will}\GCResult\SetCharacterKey{Tsunoda
+      (Enemy)}) to give Retsuko \emph{additional} work.}
+\end{card}
+\vfill
+
+\begin{card}{Ton}
+  \enemy
+  \occurence{15}
+  \relationship{Manager}
+  \cardpicture{ton}
+  \action{Use Initmidation vs.\ Will to give a difficult job using the Finance skill.}
+\end{card}
+\begin{card}{Kabae}
+  \enemy
+  \occurence{9}
+  \cardpicture{kabae}
+  \relationship{Co-worker}
+  \action{Fast Talk vs.\ Retsuko's Will to find out a secret about Retsuko.}
+\end{card}
+
+
+% \SetCharacterKey{Saitama}
+% \GCPrintCharacter
+% \ResetCharacterKey
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
